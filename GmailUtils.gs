@@ -196,7 +196,7 @@ function messageToHtml(messages, opts) {
         date = formatDate(message),
         from = formatEmails_(message.getFrom()),
         to   = formatEmails_(message.getTo()),
-        body = message.getBody();
+        body = cleanBody(message.getBody());
 
     if (opts.includeHeader) {
       if (opts.embedAvatar && (avatar = emailGetAvatar(from))) {
@@ -252,6 +252,17 @@ function messageToHtml(messages, opts) {
  */
 function emailGetName(email) {
   return email.replace(/^<?(?:[^<\(]+@)?([^<\(,]+?|)(?:\s?[\(<>,].*|)$/i, '$1') || 'Unknown';
+}
+
+/**
+ * Returns the body content, with all non-ascii characters stripped out. Darn emojis
+ *
+ * @method cleanBody
+ * @param {string} body
+ * @return {string} cleaned body text
+ */
+function cleanBody(body) {
+    return body.replace(/[^A-Za-z 0-9 \.,\?""!@#\$%\^&\*\(\)-_=\+;:<>\/\\\|\}\{\[\]`~]*/g, '')
 }
 
 /**
